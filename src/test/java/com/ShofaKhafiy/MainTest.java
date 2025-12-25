@@ -1,38 +1,28 @@
 package com.ShofaKhafiy;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit test for simple App.
  */
-public class MainTest
-    extends TestCase
-{
+public class MainTest {
+
     /**
-     * Create the test case
-     *
-     * @param testName name of the test case
+     * Setup method to initialize before each test case.
      */
-    public MainTest(String testName )
-    {
-        super( testName );
+    @BeforeEach
+    public void setUp() {
+        // Inisialisasi yang diperlukan sebelum setiap test (misalnya reset state, dll)
     }
 
     /**
-     * @return the suite of tests being tested
+     * Simple test case to test assertions.
      */
-    public static Test suite()
-    {
-        return new TestSuite( MainTest.class );
-    }
-
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+    @Test
+    public void testApp() {
+        // Test assertion
+        assertTrue(true);
     }
 }
