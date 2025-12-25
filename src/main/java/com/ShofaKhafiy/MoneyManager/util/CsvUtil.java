@@ -1,7 +1,6 @@
 package com.ShofaKhafiy.MoneyManager.util;
 
-import com.ShofaKhafiy.MoneyManager.model.Transaction;
-import com.ShofaKhafiy.MoneyManager.model.User;
+import com.ShofaKhafiy.MoneyManager.model.FinancialRecord;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -11,28 +10,27 @@ public class CsvUtil {
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
 
-    // ================= USER CSV =================
+    // ================= FINANCIAL RECORD CSV =================
 
-    public static String userToCsv(User u) {
-        return String.join(",", u.getId(), u.getUsername(), u.getPassword(), String.valueOf(u.isActive()));
+    public static String toCsv(FinancialRecord record) {
+        return String.join(",", record.getId(), record.getType(), String.valueOf(record.getAmount()),
+                record.getDescription(), record.getDate().format(DATE_FORMAT));
     }
 
-    public static User userFromCsv(String line) {
+    public static FinancialRecord fromCsv(String line) {
         String[] data = line.split(",");
-        return new User(data[0], data[1], data[2], Boolean.parseBoolean(data[3]));
-    }
-
-    // ================= TRANSACTION CSV =================
-
-    public static String toCsv(Transaction t) {
-        return String.join(",", t.getId(), t.getType(), String.valueOf(t.getAmount()), t.getDescription(),
-                String.valueOf(t.getBalanceAfter()), t.getDate().format(DATE_FORMAT));
-    }
-
-    public static Transaction fromCsv(String line) {
-        String[] data = line.split(",");
-        return new Transaction(data[0], data[1], Double.parseDouble(data[2]), data[3], Double.parseDouble(data[4]),
-                LocalDate.parse(data[5], DATE_FORMAT));
+        // Cek panjang data sebelum melakukan parsing tanggal
+        if (data.length == 5) {  // Pastikan ada 5 kolom: id, type, amount, description, date
+            try {
+                return new FinancialRecord(data[0], data[1], Double.parseDouble(data[2]), data[3], LocalDate.parse(data[4], DATE_FORMAT));
+            } catch (Exception e) {
+                System.out.println("Error parsing data: " + e.getMessage());
+                return null;  // Return null if parsing fails
+            }
+        } else {
+            System.out.println("Invalid data format in CSV: " + line);
+            return null;  // Invalid format
+        }
     }
 
     // ================= FILE UTILITY =================

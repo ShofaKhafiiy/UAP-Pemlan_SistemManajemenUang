@@ -1,4 +1,4 @@
-package com.ShofaKhafiy.MoneyManager.model;  // Sesuaikan dengan folder tempat file berada
+package com.ShofaKhafiy.MoneyManager.model;
 
 public class User {
     private String id;
@@ -18,4 +18,9 @@ public class User {
     public String getUsername() { return username; }
     public String getPassword() { return password; }
     public boolean isActive() { return isActive; }
+
+    public void setId(String id) { this.id = id; }
+    public void setUsername(String username) { this.username = username; }
+    public void setPassword(String password) { this.password = password; }
+    public void setActive(boolean isActive) { this.isActive = isActive; }
 }

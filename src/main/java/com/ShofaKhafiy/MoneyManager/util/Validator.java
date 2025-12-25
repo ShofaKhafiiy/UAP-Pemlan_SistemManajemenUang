@@ -1,4 +1,4 @@
 package com.ShofaKhafiy.MoneyManager.util;
 
-public class ValidationUtil {
+public class Validator {
 }

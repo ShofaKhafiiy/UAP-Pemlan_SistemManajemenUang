@@ -1,21 +1,19 @@
-package com.ShofaKhafiy.MoneyManager.model;  // Sesuaikan dengan folder tempat file berada
+package com.ShofaKhafiy.MoneyManager.model;
 
 import java.time.LocalDate;
 
-public class Transaction {
+public class FinancialRecord {
     private String id;
     private String type; // "income" or "expense"
     private double amount;
     private String description;
-    private double balanceAfter;
     private LocalDate date;
 
-    public Transaction(String id, String type, double amount, String description, double balanceAfter, LocalDate date) {
+    public FinancialRecord(String id, String type, double amount, String description, LocalDate date) {
         this.id = id;
         this.type = type;
         this.amount = amount;
         this.description = description;
-        this.balanceAfter = balanceAfter;
         this.date = date;
     }
 
@@ -24,6 +22,5 @@ public class Transaction {
     public String getType() { return type; }
     public double getAmount() { return amount; }
     public String getDescription() { return description; }
-    public double getBalanceAfter() { return balanceAfter; }
     public LocalDate getDate() { return date; }
 }
