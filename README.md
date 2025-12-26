@@ -41,7 +41,6 @@ Fitur untuk mengekspor riwayat transaksi ke dalam file Excel eksternal.
 ---
 
 ## 📂 Struktur Proyek
-
 com.ShofaKhafiy.MoneyManager/
 ├── mainApp/
 │ └── AppLauncher.java # Entry point utama aplikasi
@@ -71,9 +70,6 @@ com.ShofaKhafiy.MoneyManager/
 ├── ExcelUtil.java # Helper operasional file Excel
 ├── FormatUtil.java # Pemformatan mata uang & tanggal
 └── FadeAnimation.java # Logika animasi UI
-
-yaml
-Copy code
 
 ---
 
