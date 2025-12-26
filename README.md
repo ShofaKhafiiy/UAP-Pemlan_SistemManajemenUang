@@ -121,12 +121,11 @@ accounts.xlsx: Menyimpan username dan password (hashed/plain).
 db_[username].xlsx: Menyimpan ID, Tanggal, Kategori, Deskripsi, Jumlah, dan Saldo Akhir khusus untuk setiap user.
 
 👨‍💻 Author
-Dibuat dengan ❤️ oleh Shofa Khafiy untuk memenuhi tugas Ujian Akhir Praktikum Pemrograman Lanjut.
+Dibuat oleh Shofa Khafiy untuk memenuhi tugas Ujian Akhir Praktikum Pemrograman Lanjut.
 
 Money Manager - Smart Way to Track Your Wealth.
 
-markdown
-Copy code
+
 
 ### **Penjelasan:**
 - README ini memberikan penjelasan lengkap tentang aplikasi **Money Manager**, mulai dari fitur utama, teknologi yang digunakan, struktur proyek, hingga cara menjalankan aplikasi.
