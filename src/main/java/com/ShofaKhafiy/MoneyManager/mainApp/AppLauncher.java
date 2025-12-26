@@ -51,7 +51,7 @@ public class AppLauncher {
                         MoneyManagerService.getInstance().setSession(user, false);
 
                         // 2. Tampilkan MAIN FRAME (Dashboard Baru dengan Sidebar)
-                        // Menggantikan MoneyManagerGUI lama
+
                         new MainFrame().setVisible(true);
 
                         return true; // Menutup LoginFrame (sesuai logika di LoginFrame.java)

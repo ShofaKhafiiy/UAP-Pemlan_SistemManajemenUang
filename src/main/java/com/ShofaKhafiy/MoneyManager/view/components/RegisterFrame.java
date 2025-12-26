@@ -37,7 +37,7 @@ public class RegisterFrame extends JFrame {
             java.net.URL imgUrl = getClass().getResource("/logo.png");
             if (imgUrl != null) {
                 ImageIcon rawIcon = new ImageIcon(imgUrl);
-                Image scaledImg = rawIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+                Image scaledImg = rawIcon.getImage().getScaledInstance(403, 263, Image.SCALE_SMOOTH);
                 logoLabel.setIcon(new ImageIcon(scaledImg));
             } else { throw new Exception(); }
         } catch (Exception e) {

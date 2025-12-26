@@ -88,13 +88,13 @@ public class MainFrame extends JFrame {
         brand.setBorder(new EmptyBorder(0, 0, 30, 0));
 
         menuWrapper.add(brand);
-        menuWrapper.add(createSidebarButton("📊 Dashboard", "DASHBOARD", new Color(52, 152, 219)));
+//        sidebar.add(Box.createVerticalStrut(40));
+        menuWrapper.add(createSidebarButton("Dashboard", "DASHBOARD", new Color(52, 152, 219), "/home.png"));
         menuWrapper.add(new JSeparator());
-        menuWrapper.add(createSidebarButton("➕ Pemasukan", "INC", new Color(46, 204, 113)));
-        menuWrapper.add(createSidebarButton("➖ Pengeluaran", "EXP", new Color(231, 76, 60)));
-        menuWrapper.add(createSidebarButton("📄 Riwayat", "VIEW", new Color(155, 89, 182)));
-        menuWrapper.add(createSidebarButton("🚪 Keluar", "OUT", new Color(149, 165, 166)));
-
+        menuWrapper.add(createSidebarButton("Pemasukan", "INC", new Color(46, 204, 113), "/income.png"));
+        menuWrapper.add(createSidebarButton("Pengeluaran", "EXP", new Color(231, 76, 60), "/expense.png"));
+        menuWrapper.add(createSidebarButton("Riwayat", "VIEW", new Color(155, 89, 182), "/history.png"));
+        menuWrapper.add(createSidebarButton("Keluar", "OUT", new Color(149, 165, 166), "/logout.png"));
         sidebar.add(menuWrapper);
     }
 
@@ -136,9 +136,9 @@ public class MainFrame extends JFrame {
         // Summary Cards
         JPanel cards = new JPanel(new GridLayout(1, 3, 25, 0));
         cards.setOpaque(false);
-        cardSaldo = new SummaryCard("Total Saldo", "Rp 0", new Color(41, 128, 185), "💰");
-        cardIncome = new SummaryCard("Pemasukan", "Rp 0", new Color(39, 174, 96), "📈");
-        cardExpense = new SummaryCard("Pengeluaran", "Rp 0", new Color(192, 57, 43), "📉");
+        cardSaldo = new SummaryCard("Total Saldo", "Rp 0", new Color(41, 128, 185), "");
+        cardIncome = new SummaryCard("Pemasukan", "Rp 0", new Color(39, 174, 96), "");
+        cardExpense = new SummaryCard("Pengeluaran", "Rp 0", new Color(192, 57, 43), "");
         cards.add(cardSaldo); cards.add(cardIncome); cards.add(cardExpense);
 
         // Chart & Tips Row
@@ -152,7 +152,7 @@ public class MainFrame extends JFrame {
         body.add(cards, BorderLayout.NORTH);
         body.add(midRow, BorderLayout.CENTER);
 
-        lblTrxCount = new JLabel("📊 Status: Memproses data...");
+        lblTrxCount = new JLabel(" Status: Memproses data...");
         lblTrxCount.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 13));
         lblTrxCount.setForeground(new Color(86, 101, 115));
         body.add(lblTrxCount, BorderLayout.SOUTH);
@@ -225,7 +225,7 @@ public class MainFrame extends JFrame {
         }
 
         if (lblTrxCount != null) {
-            lblTrxCount.setText("📊 Menampilkan " + filteredTransactions.size() + " catatan riwayat.");
+            lblTrxCount.setText(" Menampilkan " + filteredTransactions.size() + " catatan riwayat.");
         }
 
         revalidate();
@@ -263,8 +263,8 @@ public class MainFrame extends JFrame {
 
         // Popup Menu
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem editItem = new JMenuItem("📝 Edit Transaksi");
-        JMenuItem deleteItem = new JMenuItem("🗑️ Hapus Transaksi");
+        JMenuItem editItem = new JMenuItem("Edit Transaksi");
+        JMenuItem deleteItem = new JMenuItem("Hapus Transaksi");
         popupMenu.add(editItem);
         popupMenu.addSeparator();
         popupMenu.add(deleteItem);
@@ -302,7 +302,7 @@ public class MainFrame extends JFrame {
         JButton btnHapus = new StyledButton("Hapus", new Color(231, 76, 60));
         leftActions.add(btnEdit); leftActions.add(btnHapus);
 
-        JButton btnExcel = new StyledButton("📥 Simpan Excel", new Color(46, 204, 113));
+        JButton btnExcel = new StyledButton("Simpan Excel", new Color(46, 204, 113));
 
         footer.add(leftActions, BorderLayout.WEST);
         footer.add(btnExcel, BorderLayout.EAST);
@@ -336,7 +336,7 @@ public class MainFrame extends JFrame {
         panel.setLayout(new BorderLayout(20, 15));
         panel.setBorder(new EmptyBorder(30, 30, 30, 30));
 
-        JLabel title = new JLabel("💡 Tips Keuangan");
+        JLabel title = new JLabel("Tips Keuangan");
         title.setFont(new Font("Segoe UI", Font.BOLD, 22));
         title.setForeground(new Color(52, 152, 219));
 
@@ -367,11 +367,20 @@ public class MainFrame extends JFrame {
         txtTipContent.setText("<html><body style='font-family: Segoe UI; font-size: 13px; color: #2C3E50;'>" + text + "</body></html>");
     }
 
-    private JButton createSidebarButton(String text, String cmd, Color c) {
+    private JButton createSidebarButton(String text, String cmd, Color c, String iconPath) {
         JButton btn = new JButton(text);
+
+        // Set Ikon jika path tidak null
+        if (iconPath != null) {
+            btn.setIcon(getIcon(iconPath));
+            btn.setIconTextGap(15); // Memberi jarak antara ikon dan teks
+            btn.setHorizontalAlignment(SwingConstants.LEFT); // Rata kiri agar rapi
+            btn.setBorder(new EmptyBorder(0, 20, 0, 0)); // Padding dalam
+        }
+
         btn.setUI(new RoundedButtonUI(c));
         btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btn.setForeground(new Color(200, 200, 200));
+        btn.setForeground(Color.WHITE);
         btn.setPreferredSize(new Dimension(210, 48));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.setBorderPainted(false);
@@ -402,10 +411,34 @@ public class MainFrame extends JFrame {
     }
 
     private void handleLogout() {
-        if(JOptionPane.showConfirmDialog(this, "Keluar dari aplikasi?") == 0) {
-            if(tipTimer != null) tipTimer.stop();
+        // Tambahkan parameter Judul dan Option Type (YES_NO_OPTION)
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Apakah Anda yakin ingin keluar dari aplikasi?",
+                "Konfirmasi Keluar",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (tipTimer != null) tipTimer.stop();
             service.logout();
             dispose();
         }
+    }
+
+    private Icon getIcon(String path) {
+        try {
+            // Asumsi file gambar ada di folder resources/icons/
+            java.net.URL imgUrl = getClass().getResource(path);
+            if (imgUrl != null) {
+                ImageIcon icon = new ImageIcon(imgUrl);
+                // Skala gambar menjadi 24x24 agar pas di sidebar
+                Image img = icon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+                return new ImageIcon(img);
+            }
+        } catch (Exception e) {
+            System.err.println("Gagal memuat ikon: " + path);
+        }
+        return null;
     }
 }
