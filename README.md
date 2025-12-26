@@ -40,37 +40,37 @@ Fitur untuk mengekspor riwayat transaksi ke dalam file Excel eksternal.
 
 ---
 
-## 📂 Struktur Proyek
+## 📂 Struktur Proyek (ringkasan)
+```
 com.ShofaKhafiy.MoneyManager/
 ├── mainApp/
-│ └── AppLauncher.java # Entry point utama aplikasi
+│   └── AppLauncher.java        # Entry point
 ├── model/
-│ ├── Transaction.java # Objek data transaksi (Builder Pattern)
-│ ├── User.java # Objek data pengguna
-│ ├── Category.java # Base class kategori (Inheritance)
-│ ├── TransactionType.java # Enum tipe (Income/Expense)
-│ └── TransactionResult.java # Helper status operasi
+│   ├── Transaction.java        # Transaction (Builder Pattern)
+│   ├── User.java               # User model
+│   ├── Category.java           # Base category class
+│   ├── TransactionType.java    # Enum (INCOME/EXPENSE)
+│   └── TransactionResult.java  # Status helper
 ├── controller/
-│ └── TransactionController.java # Penghubung UI dan Business Logic
+│   └── TransactionController.java
 ├── service/
-│ ├── MoneyManagerService.java # Logika bisnis utama (Singleton)
-│ ├── AuthService.java # Logika login & registrasi
-│ └── CategoryFactory.java # Pembuat kategori (Factory Pattern)
+│   ├── MoneyManagerService.java
+│   ├── AuthService.java
+│   └── CategoryFactory.java
 ├── repository/
-│ ├── TransactionRepository.java # Interface abstraksi data
-│ ├── ExcelTransactionRepository.java # Implementasi simpan ke Excel
-│ └── InMemoryTransactionRepo.java # Penyimpanan sementara (Guest)
+│   ├── TransactionRepository.java
+│   ├── ExcelTransactionRepository.java
+│   └── InMemoryTransactionRepo.java
 ├── view/
-│ ├── MainFrame.java # Frame utama dashboard
-│ ├── LoginFrame.java # Frame login
-│ ├── ModernInputDialog.java # Dialog input transaksi
-│ ├── SimpleChartPanel.java # Visualisasi grafik kustom
-│ └── components/ # Custom UI (RoundedPanel, StyledButton, dll)
+│   ├── MainFrame.java
+│   ├── LoginFrame.java
+│   ├── ModernInputDialog.java
+│   ├── SimpleChartPanel.java
+│   └── components/            # RoundedPanel, StyledButton, dll.
 └── util/
-├── ExcelUtil.java # Helper operasional file Excel
-├── FormatUtil.java # Pemformatan mata uang & tanggal
-└── FadeAnimation.java # Logika animasi UI
-
+    ├── ExcelUtil.java
+    ├── FormatUtil.java
+    └── FadeAnimation.java
 ---
 
 ## 🏗️ Arsitektur Aplikasi
