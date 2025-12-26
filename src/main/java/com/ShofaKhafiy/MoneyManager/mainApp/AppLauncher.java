@@ -3,7 +3,6 @@ package com.ShofaKhafiy.MoneyManager.mainApp;
 import com.ShofaKhafiy.MoneyManager.service.*;
 import com.ShofaKhafiy.MoneyManager.view.*;
 import com.ShofaKhafiy.MoneyManager.util.ExcelUtil;
-import com.ShofaKhafiy.MoneyManager.view.MoneyManagerGUI;
 
 import javax.swing.*;
 
@@ -13,6 +12,13 @@ public class AppLauncher {
         // Inisialisasi folder dan database akun pusat
         ExcelUtil.initDirectories();
         ExcelUtil.initAuthDatabase();
+
+        // Mengatur Look and Feel sistem (opsional, agar UI lebih native)
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         SwingUtilities.invokeLater(() -> {
             showLogin();
@@ -40,9 +46,14 @@ public class AppLauncher {
 
                     // CEK PASSWORD
                     if (auth.login(user, pass)) {
+                        // 1. Set sesi user di service
                         MoneyManagerService.getInstance().setSession(user, false);
-                        new MoneyManagerGUI().setVisible(true);
-                        return true;
+
+                        // 2. Tampilkan MAIN FRAME (Dashboard Baru dengan Sidebar)
+                        // Menggantikan MoneyManagerGUI lama
+                        new MainFrame().setVisible(true);
+
+                        return true; // Menutup LoginFrame (sesuai logika di LoginFrame.java)
                     } else {
                         JOptionPane.showMessageDialog(null, "Password salah!", "Login Gagal", JOptionPane.ERROR_MESSAGE);
                         return false;
@@ -54,13 +65,16 @@ public class AppLauncher {
                 () -> {
                     MoneyManagerService.getInstance().setSession("GUEST", true);
                     MoneyManagerService.getInstance().reset();
-                    new MoneyManagerGUI().setVisible(true);
+
+                    // Tampilkan MAIN FRAME untuk Guest
+                    new MainFrame().setVisible(true);
                 }
         );
         loginFrame.setVisible(true);
     }
 
     public static void showRegister() {
+        // Tetap menggunakan showLogin() sebagai callback setelah daftar sukses
         RegisterFrame regFrame = new RegisterFrame(() -> showLogin());
         regFrame.setVisible(true);
     }

@@ -25,6 +25,7 @@ public class ExcelTransactionRepository implements TransactionRepository {
             int lastRow = sheet.getLastRowNum();
             Row row = sheet.createRow(lastRow + 1);
 
+            String categoryName = (t.getCategory() != null) ? t.getCategory().getName() : "Lainnya";
             // URUTAN KOLOM HARUS SAMA DENGAN ExcelUtil.initUserDatabase
             row.createCell(0).setCellValue(t.getId());
             row.createCell(1).setCellValue(t.getCreatedAt().toString()); // Simpan sebagai String (ISO-8601)

@@ -7,6 +7,7 @@ import com.ShofaKhafiy.MoneyManager.util.ExcelUtil;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -40,22 +41,28 @@ public class MoneyManagerService {
 
     public TransactionResult addIncome(double amount, Category category, String desc) {
         if (amount <= 0) return TransactionResult.failure("Jumlah tidak valid");
+
+        // Saldo sementara (akan diperbaiki total di recalculateBalance)
         balance += amount;
+
         Transaction trx = new Transaction.Builder(UUID.randomUUID().toString(), TransactionType.INCOME)
                 .owner(currentUser).amount(amount).category(category).description(desc)
                 .balanceAfter(balance).build();
         repository.save(trx);
+        recalculateBalance(); // Sinkronisasi total
         return TransactionResult.success("Pemasukan berhasil", trx);
     }
 
     public TransactionResult addExpense(double amount, Category category, String desc) {
         if (amount <= 0) return TransactionResult.failure("Jumlah tidak valid");
         if (amount > balance) return TransactionResult.failure("Saldo tidak cukup!");
+
         balance -= amount;
         Transaction trx = new Transaction.Builder(UUID.randomUUID().toString(), TransactionType.EXPENSE)
                 .owner(currentUser).amount(amount).category(category).description(desc)
                 .balanceAfter(balance).build();
         repository.save(trx);
+        recalculateBalance();
         return TransactionResult.success("Pengeluaran berhasil", trx);
     }
 
@@ -64,81 +71,94 @@ public class MoneyManagerService {
         repository.clear();
         for (Transaction t : all) {
             if (t.getId().equals(target.getId())) {
-                repository.save(new Transaction.Builder(t.getId(), t.getType())
+                // Buat objek baru dengan status deleted = true
+                Transaction softDeleted = new Transaction.Builder(t.getId(), t.getType())
                         .owner(t.getOwner()).amount(t.getAmount()).category(t.getCategory())
                         .description(t.getDescription()).balanceAfter(t.getBalanceAfter())
-                        .setCreatedAt(t.getCreatedAt()).deleted(true).build());
+                        .setCreatedAt(t.getCreatedAt())
+                        .deleted(true) // Status terhapus dari riwayat
+                        .build();
+                repository.save(softDeleted);
             } else {
                 repository.save(t);
             }
         }
+        // JANGAN kurangi saldo di sini, biarkan recalculateBalance yang menghitung
         recalculateBalance();
     }
 
+    /**
+     * LOGIKA RECALCULATE:
+     * Menghitung saldo dari awal (Income - Expense)
+     * Termasuk transaksi yang di-soft-delete (isDeleted = true)
+     */
     public void recalculateBalance() {
         balance = 0;
-        List<Transaction> all = repository.findAll();
+        List<Transaction> all = new ArrayList<>(repository.findAll());
         repository.clear();
+
         for (Transaction t : all) {
-            double newBalanceAfter = t.getBalanceAfter();
             if (t.getOwner().equals(currentUser)) {
-                // Transaksi yang dihapus (soft delete) tetap dihitung saldonya agar riwayat saldo konsisten
+                // 1. Hitung saldo
                 if (t.getType() == TransactionType.INCOME) balance += t.getAmount();
                 else balance -= t.getAmount();
-                newBalanceAfter = balance;
+
+                // 2. Proteksi Kategori Null agar tidak crash saat save
+                Category safeCategory = t.getCategory();
+                if (safeCategory == null) {
+                    if (t.getType() == TransactionType.INCOME)
+                        safeCategory = new IncomeCategory("Lainnya");
+                    else
+                        safeCategory = new ExpenseCategory("Lainnya");
+                }
+
+                Transaction updatedTrx = new Transaction.Builder(t.getId(), t.getType())
+                        .owner(t.getOwner())
+                        .amount(t.getAmount())
+                        .category(safeCategory) // Gunakan kategori yang sudah diproteksi
+                        .description(t.getDescription())
+                        .balanceAfter(balance)
+                        .deleted(t.isDeleted())
+                        .setCreatedAt(t.getCreatedAt())
+                        .build();
+                repository.save(updatedTrx);
+            } else {
+                repository.save(t);
             }
-            repository.save(new Transaction.Builder(t.getId(), t.getType())
-                    .owner(t.getOwner()).amount(t.getAmount()).category(t.getCategory())
-                    .description(t.getDescription()).balanceAfter(newBalanceAfter)
-                    .deleted(t.isDeleted()).setCreatedAt(t.getCreatedAt()).build());
         }
     }
 
     /**
-     * PERBAIKAN LOGIKA EDIT:
-     * Menangani perubahan jumlah pemasukan maupun pengeluaran dengan validasi saldo.
+     * PERBAIKAN: Menyesuaikan dengan call dari TransactionController (1 Parameter)
      */
-    public TransactionResult updateTransaction(Transaction oldTrx, double newAmount, Category newCategory, String newDesc) {
-        if (newAmount <= 0) return TransactionResult.failure("Jumlah baru tidak valid");
+    public TransactionResult updateTransaction(Transaction updatedTrx) {
+        if (updatedTrx.getAmount() <= 0) return TransactionResult.failure("Jumlah tidak valid");
 
-        // 1. Hitung dampak perubahan terhadap saldo saat ini
-        double diff;
-        if (oldTrx.getType() == TransactionType.INCOME) {
-            // Jika pemasukan berubah dari 100 ke 120, diff = +20 (saldo bertambah)
-            diff = newAmount - oldTrx.getAmount();
-        } else {
-            // Jika pengeluaran berubah dari 50 ke 80, diff = -30 (saldo berkurang)
-            diff = oldTrx.getAmount() - newAmount;
-        }
-
-        // 2. Validasi: Apakah perubahan ini membuat saldo akhir jadi negatif?
-        if (balance + diff < 0) {
-            return TransactionResult.failure("Gagal Edit: Saldo tidak mencukupi untuk perubahan pengeluaran ini!");
-        }
-
-        // 3. Proses Update di Repository
         List<Transaction> all = repository.findAll();
         repository.clear();
+
         for (Transaction t : all) {
-            if (t.getId().equals(oldTrx.getId())) {
-                Transaction updated = new Transaction.Builder(t.getId(), t.getType())
-                        .owner(t.getOwner())
-                        .amount(newAmount)
-                        .category(newCategory)
-                        .description(newDesc)
-                        .deleted(t.isDeleted())
-                        .setCreatedAt(t.getCreatedAt())
-                        .build();
-                repository.save(updated);
+            if (t.getId().equals(updatedTrx.getId())) {
+                repository.save(updatedTrx);
             } else {
                 repository.save(t);
             }
         }
 
-        recalculateBalance(); // Update saldo internal 'balance' dan simpan ke Excel
-        return TransactionResult.success("Update berhasil", null);
+        recalculateBalance(); // Saldo otomatis ter-update secara global
+
+        // Cek jika setelah update saldo jadi negatif
+        if (balance < 0) {
+            // Rollback atau beri peringatan (opsional tergantung kebutuhan)
+            return TransactionResult.failure("Peringatan: Saldo menjadi negatif setelah perubahan ini!");
+        }
+
+        return TransactionResult.success("Update berhasil", updatedTrx);
     }
 
+    /**
+     * Tampilan tabel hanya mengambil yang belum di-soft-delete
+     */
     public List<Transaction> getAllTransactions() {
         return repository.findAll().stream()
                 .filter(t -> t.getOwner().equals(currentUser) && !t.isDeleted())

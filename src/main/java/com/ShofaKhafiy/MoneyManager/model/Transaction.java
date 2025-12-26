@@ -42,7 +42,12 @@ public class Transaction {
             return t;
         }
     }
-    // Getter (Pastikan tambahkan getOwner())
+    // TAMBAHKAN SETTER INI DI Transaction.java
+    public void setAmount(double amount) { this.amount = amount; }
+    public void setCategory(Category category) { this.category = category; }
+    public void setDescription(String description) { this.description = description; }
+
+    // Getter yang sudah ada
     public String getOwner() { return owner; }
     public String getId() { return id; }
     public TransactionType getType() { return type; }

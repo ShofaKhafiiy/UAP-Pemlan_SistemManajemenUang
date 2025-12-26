@@ -4,27 +4,25 @@ import javax.swing.*;
 import java.awt.*;
 
 public class RoundedPanel extends JPanel {
-
-    private final int radius;
+    private int cornerRadius;
 
     public RoundedPanel(int radius) {
-        this.radius = radius;
-        setOpaque(false);
+        super();
+        this.cornerRadius = radius;
+        setOpaque(false); // Agar background asli tidak menutupi lengkungan
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON
-        );
+        super.paintComponent(g);
+        Dimension arcs = new Dimension(cornerRadius, cornerRadius);
+        int width = getWidth();
+        int height = getHeight();
+        Graphics2D graphics = (Graphics2D) g;
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g2.setColor(getBackground());
-        g2.fillRoundRect(
-                0, 0,
-                getWidth(), getHeight(),
-                radius, radius
-        );
+        // Menggambar background panel yang melengkung
+        graphics.setColor(getBackground());
+        graphics.fillRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height);
     }
 }
