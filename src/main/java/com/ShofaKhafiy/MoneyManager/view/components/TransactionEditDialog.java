@@ -1,4 +1,4 @@
-package com.ShofaKhafiy.MoneyManager.view;
+package com.ShofaKhafiy.MoneyManager.view.components;
 
 import com.ShofaKhafiy.MoneyManager.model.*;
 import com.ShofaKhafiy.MoneyManager.service.CategoryFactory;

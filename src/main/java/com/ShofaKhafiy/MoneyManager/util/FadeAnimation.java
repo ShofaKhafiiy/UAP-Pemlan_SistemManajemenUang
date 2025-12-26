@@ -1,6 +1,6 @@
 package com.ShofaKhafiy.MoneyManager.util;
 
-import com.ShofaKhafiy.MoneyManager.view.FadePanel;
+import com.ShofaKhafiy.MoneyManager.view.components.FadePanel;
 
 import javax.swing.*;
 

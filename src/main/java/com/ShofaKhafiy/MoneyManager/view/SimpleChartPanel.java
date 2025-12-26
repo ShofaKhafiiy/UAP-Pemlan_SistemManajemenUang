@@ -1,7 +1,8 @@
 package com.ShofaKhafiy.MoneyManager.view;
 
 import com.ShofaKhafiy.MoneyManager.util.FormatUtil;
-import javax.swing.*;
+import com.ShofaKhafiy.MoneyManager.view.components.RoundedPanel;
+
 import java.awt.*;
 
 public class SimpleChartPanel extends RoundedPanel {

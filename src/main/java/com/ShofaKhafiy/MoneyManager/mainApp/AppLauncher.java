@@ -3,6 +3,7 @@ package com.ShofaKhafiy.MoneyManager.mainApp;
 import com.ShofaKhafiy.MoneyManager.service.*;
 import com.ShofaKhafiy.MoneyManager.view.*;
 import com.ShofaKhafiy.MoneyManager.util.ExcelUtil;
+import com.ShofaKhafiy.MoneyManager.view.components.RegisterFrame;
 
 import javax.swing.*;
 

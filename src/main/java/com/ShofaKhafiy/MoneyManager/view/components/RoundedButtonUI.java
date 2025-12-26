@@ -1,4 +1,4 @@
-package com.ShofaKhafiy.MoneyManager.view;
+package com.ShofaKhafiy.MoneyManager.view.components;
 
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;

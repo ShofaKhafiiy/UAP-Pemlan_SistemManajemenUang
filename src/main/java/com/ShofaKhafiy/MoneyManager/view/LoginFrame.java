@@ -1,5 +1,8 @@
 package com.ShofaKhafiy.MoneyManager.view;
 
+import com.ShofaKhafiy.MoneyManager.view.components.GradientPanel;
+import com.ShofaKhafiy.MoneyManager.view.components.StyledButton;
+
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.EmptyBorder;

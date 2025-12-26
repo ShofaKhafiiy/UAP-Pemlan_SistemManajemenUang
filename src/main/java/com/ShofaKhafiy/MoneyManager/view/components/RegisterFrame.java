@@ -1,9 +1,8 @@
-package com.ShofaKhafiy.MoneyManager.view;
+package com.ShofaKhafiy.MoneyManager.view.components;
 
 import com.ShofaKhafiy.MoneyManager.service.AuthService;
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
